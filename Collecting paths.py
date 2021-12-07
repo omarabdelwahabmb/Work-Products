@@ -104,25 +104,26 @@ for file in files:
 #output_file.write("\0")
 
 # This loop is for integrity checking.
-# It counts the number of jrxml files
-# No. of jrxml is used in the sum of total document lines
-no_of_jrxml_files = 0
+# It counts the number of undeleted jrxml files
+# No. of undeleted jrxml is used in the sum of total document lines
+# The undeleted jrxmls are the ones that are not inside a package (leaf files)
+no_of_undeleted_jrxml_files = 0
 input_file2.seek(0)
 for line2 in input_file2:
     line2_n = line2.replace("\n", "")
     if(line2.find('.jrxml') > -1 and
        (line2_n not in paths_to_delete)):
-        no_of_jrxml_files += 1
+        no_of_undeleted_jrxml_files += 1
 
 print("no_of_packages:", no_of_packages)
 print("no_of_parent_packages:", no_of_parent_packages)
 print("no_of_child_packages:", no_of_child_packages)
 print("no_of_printed_files:", no_of_printed_files)
-#print("no_of_jrxml_files:", no_of_jrxml_files)
+#print("no_of_undeleted_jrxml_files:", no_of_undeleted_jrxml_files)
 print("no_of_paths_to_delete:", len(paths_to_delete))
 print("Total lines of original document should be:",
       no_of_parent_packages + no_of_printed_files
-      + no_of_jrxml_files + len(paths_to_delete))
+      + no_of_undeleted_jrxml_files + len(paths_to_delete))
 input_file.close()
 input_file2.close()
 output_file.close()
