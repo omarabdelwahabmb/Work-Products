@@ -22,7 +22,7 @@ Omar AbdelWahab
 '''
 
 import os
-filename = input("Please, enter filename: ")
+filename = input("Please, enter file path: ")
 #print (filename) #For debugging
 #quit() # For debugging
 no_of_packages = 0
@@ -127,3 +127,7 @@ print("Total lines of original document should be:",
 input_file.close()
 input_file2.close()
 output_file.close()
+# To prevent the command prompt from disappearing after the program finishes working
+filename= "o"
+while (filename[0] != 'e' and filename[0] != 'E'):
+    filename = input("Please, enter e to exit: ")
