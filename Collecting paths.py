@@ -1,4 +1,4 @@
-'''
+print ('''
 This script detects parent packages and deletes their child files and packaegs.
 It also deletes jrxml files.
 You can comment a line to prevent jrxml deletion.
@@ -19,20 +19,60 @@ Feel free to edit and customize the script. ^_^ :)
 Best regards
 Omar AbdelWahab
 01091392684
-'''
+''')
 
 import os
 filename = input("Please, enter file path: ")
+print (
+'''If you have a black list file, you can enter its path below.
+If you don't press enter.''')
+black_list_path = input ("Please, enter black list file path:")
+if (black_list_path.find(".txt") > -1):
+    black = True
+else:
+    black = False
+    print ("No blacklist considered")
 #print (filename) #For debugging
 #quit() # For debugging
 no_of_packages = 0
 #filename = "E:\\Omar AbdelWahab\\Temp\\Patch 3.1.444 5-12-2021 at 1422 Before editing.txt"
+if (black):
+    blacklist = open(black_list_path, 'r')
 input_file = open(filename, 'r')
 input_file2 = open(filename, 'r')
 output_file_name = "Patch 3.1.xxx Program_Output.txt"
 output_file = open(output_file_name, 'w')
 paths_to_delete = []
 packages = []
+
+#Here we will iterate on the blacklist and add it to paths_to_delete
+#We will find all the ones that match the blacklist names
+#and print the ones that don't
+if (black):
+    print ("Unmatched paths in blacklist:")
+    found = False
+    unmatched = False
+    for path in blacklist:
+        path_n = path.replace("\n", "") #removes \n (end of line character)
+        found = False
+        input_file.seek(0) #To return to the begining of the file
+        for line in input_file:
+            line_n = line.replace("\n", "") #removes \n (end of line character)
+            if (line_n.find(path_n) > -1):
+                paths_to_delete.append(path_n)
+                found = True
+                break;
+        if (not found):
+            unmatched = True
+            print (path_n)
+    if (not unmatched):
+        print ('''None. All blacklist paths have been found and deleted.''')
+    else:
+        print ("Matched paths in blacklist:")
+        for matched in paths_to_delete:
+            print(matched)
+    input_file.seek(0)
+
 #i = 0; #iterations for debugging
 for line in input_file:
     pos = line.rfind("/") + 1
@@ -52,7 +92,7 @@ for line in input_file:
         if (line2.find(line_n) > -1 
             and len(line2_n) > line_length
             # To avoid packages named exportdeliveryrequestrevision
-            # to be detected as a child of exportdeliveryrequest
+            # from being detected as a child of exportdeliveryrequest
             # So I count /s to assure different packages
             and (line2_n.count("/") > line_n.count("/")) 
             and (line2_n not in paths_to_delete)): 
@@ -124,6 +164,8 @@ print("no_of_paths_to_delete:", len(paths_to_delete))
 print("Total lines of original document should be:",
       no_of_parent_packages + no_of_printed_files
       + no_of_undeleted_jrxml_files + len(paths_to_delete))
+if (black):
+    blacklist.close()
 input_file.close()
 input_file2.close()
 output_file.close()
